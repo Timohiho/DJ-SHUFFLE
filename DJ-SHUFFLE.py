@@ -44,25 +44,25 @@ async def on_message(message):
                 u = urllib.request.urlopen("https://www.youtube.com/results?q=" + name)
             except:
                 print('Fehler')
-                sys.exit(0)
+                sys.exit(0) # schliessen der funktion
 
-            li = u.readlines()
+            li = u.readlines() # Kopieren des Html code in li
 
-            u.close()
-            htmlcode = str(li)
+            u.close() # Html code schliessen
+            htmlcode = str(li) # Html code als string in die variable htmlcode
 
-            str1 = str(li);
-            str2 = "/watch?v=";
+            str1 = str(li); # Html code als string in die variable str1
+            str2 = "/watch?v="; # /watch?v= in variable str2
 
-            startsongid = htmlcode[str1.find(str2):]
-            videoid = startsongid[:20]
+            startsongid = htmlcode[str1.find(str2):] # beginn der variable str2 in htmlcode finden und bis an diese position kürzen und diese in die variable startsingid kopieren
+            videoid = startsongid[:20] # ende der variable startsongid definieren und diese in die variable videoid kopieren
             songlink = videoid.translate(str.maketrans(translation_table))
 
             print(songlink)
-            youtubesong = 'https://www.youtube.com' + songlink
+            youtubesong = 'https://www.youtube.com' + songlink # Vervollständigen der video url
 
-            userch = message.author.voice.voice_channel
-            botch = message.author.voice.voice_channel
+            userch = message.author.voice.voice_channel # herausfinden in welchem voice channel der absender ist
+            botch = message.author.voice.voice_channel # herausfinden in welchem voice channel der bot ist
             if userch == botch:
                 try:
                     voice_client = client.voice_client_in(message.server)
@@ -71,7 +71,7 @@ async def on_message(message):
                     print(error)
 
             try:
-                channel = message.author.voice.voice_channel
+                channel = message.author.voice.voice_channel # herausfinden in welchem voice channel der absender ist
                 voice = await client.join_voice_channel(channel)
                 player = await voice.create_ytdl_player(youtubesong)
                 player.start()
@@ -81,16 +81,16 @@ async def on_message(message):
 
 
 
-    if message.content.startswith('&stop'):
+    if message.content.startswith('&stop'): # Wiedergabe stopen
         try:
             voice_client = client.voice_client_in(message.server)
-            await voice_client.disconnect()
-            channel = message.author.voice.voice_channel
-            await client.join_voice_channel(channel)
+            await voice_client.disconnect() # Voice channel verlassen
+            channel = message.author.voice.voice_channel # herausfinden in welchem voice channel der absender ist
+            await client.join_voice_channel(channel) # voice channel beitreten
         except Exception as error:
-            await client.send_message(message.channel, 'ERROR ```{fehler}```'.format(fehler=error))
+            await client.send_message(message.channel, 'ERROR ```{fehler}```'.format(fehler=error)) # Fehler ausgabe
 
-    if message.content.startswith('&quit'):
+    if message.content.startswith('&quit'): # voice_channel verlassen
         try:
             voice_client = client.voice_client_in(message.server)
             await voice_client.disconnect()
@@ -104,11 +104,10 @@ async def on_message(message):
         except Exception as error:
             print(error)
         try:
-            channel = message.author.voice.voice_channel
+            channel = message.author.voice.voice_channel # herausfinden in welchem voice channel der absender ist
             await client.join_voice_channel(channel)
         except Exception as error:
             await client.send_message(message.channel, 'ERROR ```{fehler}```'.format(fehler=error))
-
 
     if message.content.startswith('&commands'):
         music_help = '&play [Song]'
@@ -121,13 +120,12 @@ async def on_message(message):
         await client.send_message(message.channel, '``{stop_help}`` stop music'.format(stop_help=stop_help))
 
     if message.content.startswith('&test'):
-        userch = message.author.voice.voice_channel
-        await client.send_message(message.channel, 'Test wird gestartet')
-        botch = message.author.voice.voice_channel
-        if userch == botch:
-            await client.send_message(message.channel, 'Wir sind im gleichen channel')
-        if userch != botch:
-            await client.send_message(message.channel, 'Wir sind nicht im gleichen channel')
-
+        userch = message.author.voice.voice_channel # herausfinden in welchem voice channel der absender ist
+        await client.send_message(message.channel, 'Test started') # ausgabe Test started
+        botch = message.author.voice.voice_channel # herausfinden in welchem voice channel der bot ist
+        if userch == botch: # ist channel absender gleich channel bot
+            await client.send_message(message.channel, 'Wir sind im gleichen channel') # ausgabe wir sind im gleichen channel
+        if userch != botch: # ist channel absender nichtgleich channel bot
+            await client.send_message(message.channel, 'Wir sind nicht im gleichen channel') # ausgabe wir sind nicht im gleichen channel
 
 client.run('MzkwODg5MjcyMjk2ODY1Nzky.DRQsYg.9562Os10ub4DrWeQu0TjGmm2dqI')
